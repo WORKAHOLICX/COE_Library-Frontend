@@ -1,0 +1,67 @@
+.nav-main{
+    background-color: #2d2a30;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    font: bold 16px 'Poppins';
+    padding: 10px 10px 10px 10px;
+}
+.navbar{
+    margin: 0 auto;
+    min-width: 90vw;
+    height: 70px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;    
+}
+
+.librarys{
+    color: #e0ac1c;
+    font-family: 'Poppins';
+    font: normal 36px 'Poppins', cursive;
+}
+
+.virtual{
+    color: #ffffff;
+    font: normal 36px 'Poppins', cursive;
+    margin: 0;
+}
+
+
+.logo-image{
+    width: 3em;
+    height: 3em;
+    border-radius: 50px;
+    background-image: url('../../Assets/Klogo.png');
+    background-size: cover;
+    background-position: center; 
+    margin-bottom: 20px;
+}
+.nav_list{
+    display: flex;
+    gap: 2em;
+    padding-right: 20px ;
+    height: 10vh;
+    align-items: center;
+    position: relative;
+    left: -60px;
+}
+.nav-links{
+    list-style-type: none;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.nav-links a{
+    display: inline-block;
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: 0.5s;
+}
+
+.nav-links:hover a{
+    color: yellow;
+}

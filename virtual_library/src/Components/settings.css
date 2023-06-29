@@ -1,0 +1,134 @@
+.settingss-body {
+  background: linear-gradient(to right, rgb(252, 244, 144), rgb(247, 248, 174));
+  /* background-image: linear-gradient(0deg, rgba(0,0,0,0.05),rgba(0,0,0,0.05)), url("../Assets/paper.jpg"); */
+  box-sizing: border-box;
+  display: flex;
+}
+
+.settings-container {
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 80vw;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding-bottom: 20px;
+  box-shadow: 2px 5px 20px rgba(119, 119, 119, 0.5);
+  margin-bottom: 20px;
+}
+
+.settings-logo {
+  float: right;
+  margin-right: 12px;
+  margin-top: 12px;
+  font-family: "Poppins";
+  color: gray;
+  font-weight: 900;
+  font-size: 30px;
+  letter-spacing: 1px;
+  font-display: center;
+  margin-right: 35%;
+}
+
+.leftbox {
+  float: left;
+  width: 13%;
+  height: 100%;
+  background: white;
+  box-shadow: 3px 3px 10px rgba(119, 119, 119, 0.5);
+}
+
+/* .active {
+  color: #3fb6a8;
+} */
+
+.setting {
+  padding-top: 15px;
+  margin-left: 5px;
+}
+
+.h11 {
+  font-size: 2em;
+  font-family: "Poppins";
+  margin-top: 40px;
+  margin-bottom: 35px;
+  text-align: center;
+}
+
+.h12 {
+  color: rgb(0, 0, 0);
+  width: 80%;
+  font-family: "Poppins";
+  text-transform: uppercase;
+  font-size: 15px;
+  letter-spacing: 1px;
+  margin-left: 2px;
+  margin-top: 15px;
+}
+
+.answer {
+  border-width: 1px;
+  border-style: solid;
+  border-image: linear-gradient(to right, #3fb6a8, rgba(126, 211, 134, 0.5)) 10%;
+  border-top: 0;
+  margin-right: 5px;
+  font-family: "Poppins";
+  padding: 7px 0;
+  color: black;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.btns {
+  font-family: "Poppins";
+  text-transform: uppercase;
+  font-size: 12px;
+  border: none;
+  color: #3fb6a8;
+  outline: none;
+  background-color: transparent;
+  padding-left: 10px;
+}
+
+.btns:hover {
+  text-decoration: underline;
+  font-weight: 900;
+}
+
+.eye-btns {
+  background: transparent;
+  outline: none;
+  border: none;
+  color: black;
+  float: right;
+  padding-right: 10px;
+}
+
+.setting input {
+  width: 76.5vw;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  font-size: 1em;
+  font-family: "Poppins";
+  color: black;
+  white-space: normal;
+  padding-left: 10px;
+}
+
+.sele {
+  width: 76.5vw;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  font-size: 1em;
+  font-family: "Poppins";
+  white-space: normal;
+  padding-left: 5px;
+}
+
+.passwordSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  color: #3fb6a8;
+}

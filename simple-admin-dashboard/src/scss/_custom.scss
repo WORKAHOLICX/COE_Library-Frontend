@@ -1,0 +1,26 @@
+// Here you can add other styles
+.forms_background{
+    // background-image: url("../Lands_commission/Components/Images/Image_one.jpg");
+    background-color: rgba(255,255,255,0.56);
+    background-attachment: fixed;
+    background-position: bottom right;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.display-1{
+    text-align: center;
+}
+
+.home-animation{
+    max-width: max-content;
+}
+
+.dark-background{
+    background-color: $dark;
+}
+
+.dark-text{
+    color: $dark;
+    
+}

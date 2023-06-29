@@ -1,0 +1,194 @@
+.hero {
+  display: flex;
+  height: 52vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.hero_head {
+  text-transform: uppercase;
+  font-family: "Poppins";
+  font-size: 80px;
+}
+
+.buttons {
+  padding-top: 1em;
+}
+.butt_link {
+  text-decoration: none;
+  color: white;
+}
+
+.containers {
+  min-height: 70vh;
+}
+
+.slides {
+  width: 85vw;
+  padding: 1em;
+  margin: auto;
+}
+.lect_head,
+.ref_book_head {
+  text-align: center;
+  font-family: "Poppins";
+  text-transform: uppercase;
+  width: 200px;
+  min-width: 50vw;
+  margin: 20px auto;
+  border-radius: 25px;
+  background: transparent;
+  border-bottom: 1px solid gray;
+}
+.lect_slides {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 25px;
+  margin-bottom: 50px;
+  font-family: "Poppins";
+  border-bottom: 1px solid rgba(181, 181, 181, 0.9);
+}
+
+.lect_one {
+  font-size: 25px;
+  display: flex;
+  height: 30px;
+  gap: 0.8em;
+  align-items: center;
+  margin-top: 10px;
+  justify-content: space-between;
+  padding-top: 15px;
+  text-transform: capitalize;
+  word-break: break-all;
+}
+.doc_icon_50x50 {
+  width: 30px;
+  height: 30px;
+}
+.left_lect_block_4 {
+  display: flex;
+  height: 30px;
+  align-items: center;
+  gap: 0.5em;
+  transition: opacity 0.5s ease-in;
+}
+
+.right_lect_block_4:hover a {
+  color: gray;
+}
+
+.ref_books {
+  height: 100px;
+  width: 100px;
+  margin: 2em auto;
+}
+.ref_bookss {
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.first_link {
+  display: flex;
+  gap: 1em;
+  height: 30px;
+  align-items: center;
+}
+
+.first_links {
+  text-decoration: none;
+}
+.first_links:hover {
+  text-decoration: underline;
+}
+
+.right_lect_block_4 a {
+  text-decoration: none;
+}
+
+.ref_cov_page {
+  gap: 60px;
+  margin-left: 60px;
+}
+
+.book_label {
+  font-size: 22px;
+  width: 300px;
+  font-family: "Poppins";
+  word-break: break-all;
+  text-align: center;
+}
+
+.image {
+  height: 300px;
+  width: 300px;
+}
+
+.Available {
+  font-size: 50px;
+  text-transform: uppercase;
+  padding: 60px;
+  font-family: "Poppins";
+  text-align: center;
+}
+
+.hov {
+  cursor: pointer;
+}
+
+.hov:hover {
+  color: blue;
+}
+
+.program_fonts {
+  font-size: 60px;
+  color: #fca510;
+}
+
+@media screen and (max-width: 600px) {
+  .courses_name {
+    font-size: 30px;
+  }
+  .nav_list {
+    left: 0;
+  }
+  .slides {
+    padding: 0;
+    padding-right: 20px;
+  }
+  .Available {
+    font-size: 60px;
+  }
+  .containers {
+    width: 20px;
+  }
+  .program_fonts {
+    font-size: 40px;
+  }
+  .ref_cov_page {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .Available {
+    font-size: 30px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .slides {
+    width: 70vw;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .slides {
+    width: 80vw;
+  }
+}

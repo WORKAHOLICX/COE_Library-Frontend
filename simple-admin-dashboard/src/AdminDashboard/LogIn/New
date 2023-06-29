@@ -1,0 +1,103 @@
+
+
+import React from "react";
+import { Container, Wrapper, InputContainer, InputLabel, InputField, LoginButton } from "./LoginStyled";
+import * as Yup from 'yup';
+import { Form, Formik } from 'formik';
+import { Link } from "react-router-dom";
+import { ThreeDots } from 'react-loader-spinner';
+
+
+function Login() {
+
+    return (
+        <>
+            <Container>
+                <div className='overlay'>
+                    <Wrapper>
+
+                        <h2>Welcome Back</h2>
+                        <Formik
+                            initialValues={{
+                                username: "",
+                                password: "",
+
+                            }}
+
+                            validationSchema={
+                                Yup.object({
+                                    username: Yup.string()
+                                        .required("Username is required"),
+                                    password: Yup.string()
+                                        .required("Password is required"),
+                                })
+                            }
+
+                            onSubmit={(values) => {
+                                console.log(values)
+                            }}
+
+                        >
+
+                            {({ isSubmitting }) => (
+                                <Form>
+                                    <InputContainer>
+                                        <InputLabel>Username</InputLabel>
+
+
+                                        <InputField
+                                            name="username"
+                                            placeholder="Username"
+                                            type="text"
+                                        />
+
+                                    </InputContainer>
+
+                                    <InputContainer>
+                                        <InputLabel>Password</InputLabel>
+
+
+                                        <InputField
+                                            name="password"
+                                            placeholder="Password"
+                                            type="password"
+                                        />
+
+                                    </InputContainer>
+
+                                    {!isSubmitting && (
+                                        <div style={{ textAlign: 'center' }}>
+                                            {/* <Link to="/login"> */}
+                                            <LoginButton type="submit" className="action">Login </LoginButton>
+                                            {/* </Link> */}
+
+                                        </div>
+                                    )}
+
+                                    {isSubmitting && (
+                                        <ThreeDots
+                                            color="blue"
+                                            height={49}
+                                            width={100}
+                                        />
+                                    )}
+
+
+                                </Form>
+
+                            )}
+                        </Formik>
+
+
+                    </Wrapper>
+
+                </div>
+            </Container>
+
+
+        </>
+
+    )
+}
+
+export default Login;

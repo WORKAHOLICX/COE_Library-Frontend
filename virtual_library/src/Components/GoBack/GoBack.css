@@ -1,0 +1,53 @@
+.All{
+    position: relative;
+    left: -35px;
+}
+
+.back{
+    position: relative;
+    /* transform: translate(-50%,50%); */
+    /* top:'-20px'; */
+    cursor: pointer;
+}
+
+.gob{
+    list-style: none;
+    width: 50px;
+    height: 50px;
+    background: #262626;
+    margin: 0 10px;
+    border-radius: 50%;    
+    transition: .5s; 
+}
+
+.gob:hover{
+    background: #0070ff;
+}
+
+.prev{
+    position: absolute;
+    top: 25px;
+    left: 55px;
+    width: 20px;
+    height: 20px;
+    border: 4px solid #fff;
+    transition: 0.5s;
+    transform: translateY(-50%) rotate(-45deg);
+    border-right: none;
+    border-bottom: none;
+}
+
+.prev::before{
+    content: '';
+    position: absolute;
+    width: 35px;
+    height: 4px;
+    background: #fff;
+    transform-origin: left ;
+    transform: rotate(45deg) translate(-1px,-2px) scaleX(0);
+    transition: 0.5s;
+}
+
+.gob:hover .prev::before{
+    transform: rotate(45deg) translate(-1px,-2px) scaleX(1);
+}

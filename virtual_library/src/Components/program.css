@@ -1,0 +1,53 @@
+
+.below_navs{
+    display: flex;
+    min-height: 52vh;
+    width: 100vw;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;       
+}
+
+
+.below_navs h1{
+    font-family: 'Poppins'; 
+}
+.program_font{
+    font-size: 60px;
+}
+
+.sel{
+    width: 230px;
+    padding: 15px;
+    padding-left: 10px;
+    font-weight: 400;
+    letter-spacing: 5px;
+    color: black;
+    border: 2px solid black;
+    display: block;
+    transition: ease-in-out 0.3s;
+    mix-blend-mode: multiply;
+}
+
+
+.folders{
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin-right: 20px;
+    background-color: transparent;
+    mix-blend-mode: multiply;
+}
+
+.links a {
+    text-decoration: none;
+    
+}
+@media screen and (max-width :450px){
+    .program_font{
+        font-size: 40px;
+    }
+}
+
+

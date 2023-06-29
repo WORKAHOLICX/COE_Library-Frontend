@@ -1,0 +1,129 @@
+.About-us {
+  background-color: black;
+  overflow-x: hidden;
+}
+
+.AboutUs-image {
+  width: 90vw;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  background-image: url("../../Assets/Creative\ team-cuate.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.group-name {
+  color: #fdd017;
+  font-size: 70px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+}
+
+.group-name span {
+  margin-right: 9em;
+}
+
+.team {
+  height: 20vh;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid white;
+}
+.team h1 {
+  font-size: 40px;
+}
+
+.vision {
+  margin-top: 40px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: space-around;
+}
+.highlights {
+  color: #e0ac1c;
+}
+
+.infoss {
+  display: flex;
+  justify-content: space-around;
+}
+
+@keyframes sliding {
+  0% {
+    transform: translateX(-50px);
+  }
+}
+
+.box {
+  width: 400px;
+  border: 3px solid white;
+  margin-right: 15px;
+  text-align: center;
+  animation: sliding 2s ease-in;
+}
+.box1 {
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+@media screen and (max-width: 600px) {
+  .box1 {
+    margin-left: 10px;
+  }
+  .team {
+    text-align: center;
+  }
+}
+
+.contact {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.contact-photo {
+  width: 24vw;
+  height: 40vh;
+  background-image: url("../../Assets/Get\ in\ touch-bro.svg");
+  background-repeat: no-repeat;
+  background-color: black;
+  background-size: contain;
+  background-position: center;
+}
+.contact-row {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
+}
+.contact-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-detail {
+  margin: 10px;
+}
+
+.con {
+  color: #fdd017;
+}
+
+.contact-photo2 {
+  width: 20vw;
+  height: 40vh;
+  background-image: url("../../Assets/Sent\ Message-amico.svg");
+  background-repeat: no-repeat;
+  background-color: black;
+  background-size: contain;
+  background-position: center;
+}

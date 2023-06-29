@@ -1,0 +1,61 @@
+.progcards {
+  width: 18rem;
+  float: left;
+  margin-left: 110px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+  align-content: left;
+  background-color: transparent;
+  border: none;
+  box-shadow: 5px 10px 8px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+
+.progcards:hover {
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
+  /* cursor: pointer; */
+}
+
+.progcardsimg {
+  height: 180px;
+  /* mix-blend-mode: ; */
+  background-color: transparent;
+}
+
+@media screen and (max-width: 600px) {
+  .progcards {
+    margin-left: 50px;
+  }
+}
+
+/* @media screen and (max-width: 600px) {
+    .progcards{
+        width: 120px;
+        height: 120px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .progcardsimg{
+        height: 50px;
+    }
+    .cardbody{
+
+    }
+    .cardTitle{
+        font-size: 10px;
+    }
+    .cardText{
+        font-size: 5px;
+    }
+    .cardsbutton{
+        position: relative;
+        left: -14px;
+    }
+
+    
+        
+    
+} */

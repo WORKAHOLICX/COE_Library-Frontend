@@ -1,0 +1,78 @@
+.whole{
+    background-color: rgb(144, 144, 22);
+    height: 100vh;
+    background-repeat: no-repeat;
+    overflow-y: hidden;
+
+}
+.sub{
+    
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.number{
+    color:white;
+    margin-top: 50px;
+    font-size: 200px;
+    animation: animate 2s ease-in-out infinite;
+    
+}
+.number:nth-child(even){
+    animation-delay: -1s;
+}
+.Button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+        
+}
+.Button button{
+    border-radius: 10px;
+    margin-top: 10px;
+    
+}
+.link {
+    text-decoration: none;
+    background: #fff;
+    color:#000;
+    width: 160px;
+    height: 50px;
+    line-height: 50px; 
+    border-radius: 50px;
+    display:inline-block; 
+    font-size: 20px;
+}
+@keyframes animate {
+    0%,100%{
+        transform:translateY(-50px);
+    }
+    50%{
+        transform: translateY(50px);
+    }
+    
+}
+.field{
+    text-align: center;
+    color:whitesmoke
+}
+
+@media screen and(max-width:600px) {
+  .number{
+    font-size: 100px;
+    font-weight: 0px;
+  } 
+  .field{
+    align-items: flex-start;
+  } 
+  
+    
+}
+.pic{
+    background-image: url("../../Assets/broken_bulb.png");
+    background-color: rgb(144, 144, 22);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    height: 150px;
+}

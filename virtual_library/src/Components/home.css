@@ -1,0 +1,122 @@
+.below_nav {
+  height: 450px;
+  width: 100vw;
+  /* background-position: center center; */
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  animation: fade 80s linear infinite 0s;
+  animation-timing-function: ease-in-out;
+  background-image: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url("../Assets/BackgroundImages/0000\ E-library.jpg");
+}
+
+.searchb {
+  display: flex;
+  justify-content: space-around;
+}
+
+@keyframes fade {
+  /* 0% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/BackgroundImages/207175-women-Russian-books-library-book_store-748x499.jpg");
+  } */
+  10% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/BackgroundImages/207175-women-Russian-books-library-book_store-748x499.jpg");
+  }
+  20% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/BackgroundImages/3133127.jpg");
+  }
+  30% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/BackgroundImages/Digital-Libraries.jpg");
+  }
+  40% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/BackgroundImages/Digital-library-4.jpg");
+  }
+  50% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/BackgroundImages/digital-library-concept-black-silhouettes-illustration.jpg");
+  }
+  60% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/BackgroundImages/Digital-Library-of-India.jpg");
+  }
+  70% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/BackgroundImages/digital-library.jpg");
+  }
+  80% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/BackgroundImages/library\ background.jpg");
+  }
+  90% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/BackgroundImages/photo-1548048026-5a1a941d93d3.jpg");
+  }
+  100% {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url("../Assets/VL.png");
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .progcard {
+    float: right;
+    align-content: space-between;
+    padding-right: 40px;
+    display: flex;
+    flex-direction: row;
+  }
+}
