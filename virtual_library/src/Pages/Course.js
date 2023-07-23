@@ -6,7 +6,7 @@ import { HiDownload, HiEye } from "react-icons/hi";
 import Footer from "../Components/Footer/Footer";
 import Navbar from "../Components/Navbar/Navbar";
 import GoBack from "../Components/GoBack/GoBack";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import {
   BoxLoading,
   RollBoxLoading,
@@ -19,6 +19,8 @@ import { useAuth } from "./hooks/useAuth";
 import { CAlert, CButton, CCol } from "@coreui/react";
 import { Card } from "react-bootstrap";
 import Unavailable from "../Assets/Asset/Unavailable.jfif";
+import CustomModal from "../Components/Modal/CustomModal";
+import CustomLoader from "../Components/Loader/CustomLoader";
 
 const Course = () => {
   const { logout } = useAuth();
@@ -32,20 +34,21 @@ const Course = () => {
   ];
   const isAvailable = "No Slides are available for this course";
   const notAvailable = "No Course Materials are available for this course";
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
   const [loading, setLoading] = useState(true);
+  const [loadingFile, setLoadingFile] = useState(false);
   const [course, setcourse] = useState([]);
   const [book, setBooks] = useState([]);
   const idm = pathname.slice(6);
   const [modal, setModal] = useState(false);
   const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
       await axios
         .get(`/course/${idm}`)
         .then((res) => {
-          console.log(res.data[0]);
           setcourse(res.data[0]);
           setBooks(res.data[1]);
           setLoading(false);
@@ -70,89 +73,96 @@ const Course = () => {
   };
 
   const getFiles = (path, lecture_name) => {
-    setLoading(true);
+    setLoadingFile(true);
 
-    const { IDM, name, year, semester } = path[0];
-    const ext = getFileExtension(lecture_name);
-    axios({
-      url: `/program/${IDM}/${year}/${semester}/${name}/${lecture_name}`,
-      method: "GET",
-      responseType: "blob",
-    })
+    const { name, year, semester } = path[0];
+
+    const data = {
+      programme: state,
+      year: year,
+      semester: semester,
+      course: name,
+      slide_name: lecture_name,
+    };
+
+    axios
+      .post("/program/getDetaFile", data, { responseType: "blob" })
       .then((response) => {
-        const href = URL.createObjectURL(response.data);
+        const blob = new Blob([response.data], {
+          type: "application/octet-stream",
+        });
+        const blobUrl = URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.href = href;
-        link.setAttribute("download", `${lecture_name}.${ext}`); //or any other extension
+        link.href = blobUrl;
+        link.download = lecture_name;
         document.body.appendChild(link);
         link.click();
+
         document.body.removeChild(link);
-        URL.revokeObjectURL(
-          `/program/${IDM}/${year}/${semester}/${name}/${lecture_name}`
-        );
-        setLoading(false);
+        URL.revokeObjectURL(blobUrl);
+
+        setLoadingFile(false);
       })
-      .catch((err) => {
-        const error = err.response.status;
-        if (error === 401) {
-          logout();
-        }
-        alert(`${lecture_name} is not available`);
-        setLoading(false);
+      .catch((error) => {
+        console.error("Error downloading file:", error);
+        setLoadingFile(false);
       });
   };
 
   const displayFile = (path, lecture_name) => {
-    setLoading(true);
-    const { IDM, name, year, semester } = path[0];
-    const ext = getFileExtension(lecture_name);
-    switch (ext) {
-      case "pdf":
-        axios({
-          url: `/program/${IDM}/${year}/${semester}/${name}/${lecture_name}`,
-          method: "GET",
-          responseType: "blob",
-        })
-          .then((response) => {
-            setLoading(false);
-            const link = document.createElement("a");
-            console.log(link.pathname);
-            const file = new Blob([response.data], {
-              type: `application/${ext}`,
-            });
-            const href = URL.createObjectURL(file);
-            link.href = href;
-            console.log(link.pathname);
-            link.download = "Lecture One";
+    const { name, year, semester } = path[0];
 
-            window.open(link);
-          })
-          .catch((err) => {
-            console.log("here");
-            const error = err.response.data.msg;
-            if (error === "User is not Logged In") {
-              logout();
-            }
-            setLoading(false);
-          });
-        break;
-      case "pptx":
-      case "ppt":
-        setModal(true);
-        setLoading(false);
-        break;
-      default:
-        break;
+    const data = {
+      programme: state,
+      year: year,
+      semester: semester,
+      course: name,
+      slide_name: lecture_name,
+    };
+
+    const ext = getFileExtension(lecture_name);
+    if (ext === "pdf") {
+      setLoadingFile(true);
+      axios
+        .post("/program/getDetaFile", data, { responseType: "blob" })
+        .then((response) => {
+          const blob = new Blob([response.data], { type: response.data.type });
+          // const blobs = new Blob([response.data], {
+          //   type: "application/vnd.ms-powerpoint",
+          // });
+          // const blobUrl = URL.createObjectURL(blobs);
+          const reader = new FileReader();
+
+          reader.readAsDataURL(blob);
+
+          reader.onloadend = () => {
+            const dataURL = reader.result;
+
+            navigate(`/preview/${name}/${lecture_name}`, {
+              state: {
+                fileContent: dataURL,
+              },
+            });
+          };
+
+          setLoadingFile(false);
+        })
+        .catch((error) => {
+          console.error("Error downloading file:", error);
+          setLoadingFile(false);
+        });
+    } else {
+      setModal(true);
     }
   };
 
   if (loading) {
     return (
-      <div>
+      <>
         <div className="loader-container">
           <div className="spinner"></div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -197,25 +207,9 @@ const Course = () => {
     );
   }
 
-  const toggleModal = () => {
-    setModal(!modal);
-  };
-
-  if (modal) {
-    document.body.classList.add("active-modall");
-  } else {
-    document.body.classList.remove("active-modall");
-  }
-
   return course != "" ? (
     <div>
-      {loading ? (
-        <div className="loader-container">
-          <div className="spinner"></div>
-        </div>
-      ) : (
-        <></>
-      )}
+      {loadingFile && <CustomLoader />}
       <Navbar />
       <div
         className="hero"
@@ -240,25 +234,12 @@ const Course = () => {
       </div>
       <div className="Everything">
         <>
-          {modal ? (
-            <div className="modall">
-              <div onClick={toggleModal} className="overlay"></div>
-              <div className="modall-content">
-                <div className="topic"></div>
-                <hr />
-                <h3>
-                  Cannot view powerpoint in browser for now, please download
-                </h3>
-
-                <br />
-                <br />
-                <button className="close-modall" onClick={toggleModal}>
-                  OK
-                </button>
-              </div>
-            </div>
-          ) : (
-            <></>
+          {modal && (
+            <CustomModal
+              isOpen={() => setModal(true)}
+              closeModal={() => setModal(false)}
+              message="Sorry, cannot preview ppt/pptx files at the moment, please download"
+            />
           )}
         </>
 
