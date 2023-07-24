@@ -26,10 +26,11 @@ const CustomModal = ({ isOpen, closeModal, message }) => {
   return (
     <Modal
       className="mdd:w-[600px] w-[80vw] p-4"
-      isOpen={isOpen}
+      isOpen={true}
       onRequestClose={closeModal}
       contentLabel="Modal"
       style={modalStyle}
+      ariaHideApp={false}
     >
       <div className="bg-white p-4 rounded-lg text-center">
         <p className="text-xl font-semibold">{message}</p>

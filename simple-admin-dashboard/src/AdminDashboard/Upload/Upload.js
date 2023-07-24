@@ -1,297 +1,405 @@
-import { Form, Formik } from "formik";
-import { GiHamburgerMenu } from "react-icons/gi";
-import * as yup from "yup";
 import axios from "../../utils/axios";
 import React, { useState, useEffect } from "react";
 import Sidebar1 from "../../AdminDashboard/Sidebar/Sidebar1";
 import {
   Container,
   InputContainer,
+  InputField,
   InputLabel,
+  InputSelect,
   UploadButton,
   Wrapper,
-  NavBar,
 } from "./uploadStyled";
-import {
-  SettingsFile,
-  SettingsInput,
-  SettingsSelect,
-} from "../../Components/Form";
 import { ButtonGroup } from "../../Components/Style";
 import { ThreeDots } from "react-loader-spinner";
+import {
+  CourseOptions,
+  mapProgramme,
+  mapSemester,
+  mapYear,
+} from "../../utils/lib";
+import CustomModal from "../../Components/Modal/CustomModal";
 
 const Upload = () => {
-  const [course, setcourse] = useState([]);
-  const [File, setFile] = useState({});
+  const [courseData, setCourseData] = useState([]);
+  const [courseOptions, setCourseOptions] = useState([]);
+  const [programOptions, setProgramOptions] = useState([]);
   const [modal, setModal] = useState(false);
-  const [isopen, setIsopen] = useState(false);
-
-  const showSidebar = () => {
-    setIsopen(!isopen);
-  };
+  const [showCourseOptions, setShowCourseOptions] = useState(false);
+  const [formData, setFormData] = useState({
+    courseName: "",
+    programmeName: "",
+    level: "",
+    semester: "",
+    filetoUpload: null,
+  });
+  const [mappedLevel, setMappedLevel] = useState("");
+  const [mappedSemester, setMappedSemester] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [touchedFields, setTouchedFields] = useState({
+    courseName: false,
+    programmeName: false,
+    filetoUpload: false,
+  });
 
   useEffect(() => {
-    function fetchData() {
+    const fetchData = () => {
       axios
         .get("/admin/course")
         .then((res) => {
-          setcourse(res.data.map((o) => o.name).flat());
+          setCourseData(res.data);
+          const uniqueIDMs = [...new Set(res.data.map((course) => course.IDM))];
+          setProgramOptions(uniqueIDMs);
         })
         .catch((err) => {
           console.log(err);
         });
-    }
+    };
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [modal]);
 
-  const uploadHandler = async (input) => {
-    const formData = new FormData();
-    formData.append("filetoUpload", File);
-    formData.append("courseName", input.courseName);
-    formData.append("programme", input.programmeName);
-    formData.append("level", input.level);
-    formData.append("semester", input.semester);
+  useEffect(() => {
+    const filteredCourseData = courseData.find(
+      (course) =>
+        course.name === formData.courseName &&
+        course.IDM === formData.programmeName
+    );
 
-    await axios
-      .post("/admin/upload", formData)
-      .then((res) => {
-        console.log(res);
-        setModal(true);
-      })
-      .catch((err) => {
-        console.log(err);
+    if (filteredCourseData) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        level: filteredCourseData.year,
+        semester: filteredCourseData.semester,
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        level: "",
+        semester: "",
+      }));
+    }
+  }, [formData.courseName, formData.programmeName, courseData]);
+
+  useEffect(() => {
+    setMappedLevel(mapYear(formData.level));
+    setMappedSemester(mapSemester(formData.semester));
+  }, [formData.level, formData.semester, formData.programmeName, courseData]);
+
+  useEffect(() => {
+    if (formData.courseName !== "") {
+      const filteredPrograms = courseData
+        .filter((course) => course.name === formData.courseName)
+        .map((course) => course.IDM);
+      setProgramOptions([...new Set(filteredPrograms)]);
+    } else {
+      const uniqueIDMs = [...new Set(courseData.map((course) => course.IDM))];
+      setProgramOptions(uniqueIDMs);
+    }
+  }, [formData.courseName, courseData]);
+
+  useEffect(() => {
+    handleChange({
+      target: {
+        name: "programmeName",
+        value: programOptions[0] || "",
+      },
+    });
+  }, [programOptions, courseData]);
+
+  const uploadHandler = async () => {
+    try {
+      setLoading(true);
+      const mappedFormData = {
+        ...formData,
+        level: mapYear(formData.level),
+        semester: mapSemester(formData.semester),
+        programmeName: mapProgramme(formData.programmeName),
+      };
+
+      const newformData = new FormData();
+      newformData.append("filetoUpload", mappedFormData.filetoUpload);
+      newformData.append("courseName", mappedFormData.courseName);
+      newformData.append("programme", mappedFormData.programmeName);
+      newformData.append("level", mappedFormData.level);
+      newformData.append("semester", mappedFormData.semester);
+
+      await axios.post("/admin/upload", newformData);
+      setModal(true);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+      setFormData({
+        courseName: "",
+        programmeName: "",
+        level: "",
+        semester: "",
+        filetoUpload: null,
       });
+      setTouchedFields({
+        courseName: false,
+        programmeName: false,
+        filetoUpload: false,
+      });
+    }
   };
 
-  const slides = [
-    "Lecture One",
-    "Lecture Two",
-    "Lecture Three",
-    "Lecture Four",
-    "Lecture Five",
-    "Lecture Six",
-    "Lecture Seven",
-    "Lecture Eight",
-    "Lecture Nine",
-    "Lecture Ten",
-    "Lecture Eleven",
-    "Lecture Twelve",
-    "Lecture Thirteen",
-    "Lecture Fourteen",
-    "Lecture Fifteen",
-    "Lecture Sixteen",
-    "Lecture Seventeen",
-    "Lecture Eighteen",
-    "Lecture Nineteen",
-    "Lecture Twenty",
-  ];
-
-  const toggleModal = () => {
-    setModal(!modal);
+  const handleCourseChange = (selectedCourse) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      courseName: selectedCourse,
+    }));
+    setShowCourseOptions(false);
+    setTouchedFields((prevTouchedFields) => ({
+      ...prevTouchedFields,
+      courseName: true,
+    }));
+    const error = validateField("courseName", selectedCourse);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      courseName: error,
+    }));
   };
 
-  if (modal) {
-    document.body.classList.add("active-modall");
-  } else {
-    document.body.classList.remove("active-modall");
-  }
+  const handleCourseSearch = (wordEntered) => {
+    if (wordEntered?.trim() === "") {
+      setCourseOptions([]);
+    } else {
+      const uniqueCourseOptions = new Set(
+        courseData
+          .filter((course) =>
+            course.name.toLowerCase().includes(wordEntered.toLowerCase())
+          )
+          .map((course) => course.name)
+      );
+      setCourseOptions(Array.from(uniqueCourseOptions));
+    }
+  };
+
+  const validateField = (name, value) => {
+    switch (name) {
+      case "courseName":
+        if (value === "") {
+          return "Enter the courseName";
+        } else if (value !== "" && !courseOptions.includes(value)) {
+          return "Course Name does not exist";
+        }
+        break;
+      case "programmeName":
+        return value?.trim() === "" ? "Select the Programme" : "";
+      case "filetoUpload":
+        if (!value) {
+          return "You need to provide a file";
+        } else {
+          const allowedFormats = ["pdf", "ppt", "pptx"];
+          const fileExtension = value?.name?.split(".").pop().toLowerCase();
+          if (!allowedFormats.includes(fileExtension)) {
+            return "Unsupported Format";
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    return "";
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+
+    if (touchedFields[name]) {
+      let fieldValue = type === "file" ? e.target.files[0] : value;
+      const error = validateField(name, fieldValue);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: error,
+      }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    let error = validateField(name, value);
+
+    if (e.target.type === "file") {
+      const file = e.target.files[0];
+      error = validateField(name, file);
+    }
+
+    setTouchedFields((prevTouchedFields) => ({
+      ...prevTouchedFields,
+      [name]: true,
+    }));
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+  };
+
+  const handleUploadButtonClick = () => {
+    let allErrors = {};
+    for (const fieldName in formData) {
+      const error = validateField(fieldName, formData[fieldName]);
+      if (error) {
+        allErrors[fieldName] = error;
+      }
+    }
+    setErrors(allErrors);
+
+    if (Object.keys(allErrors).length === 0) {
+      uploadHandler();
+    }
+  };
 
   return (
     <Container>
       <div className="overlay">
-        <Sidebar1 isopen={isopen} />
-
-        {/* <NavBar>
-                    <GiHamburgerMenu className="hamburger" onClick={showSidebar} style={{ paddingLeft: '10px' }} />
-                   
-                </NavBar> */}
+        <Sidebar1 isopen={false} />
 
         <Wrapper>
-          <>
-            {modal ? (
-              <div className="modall">
-                <div onClick={toggleModal} className="overlayss"></div>
-                <div className="modall-content">
-                  <div className="topic"></div>
-                  <hr />
-                  <h3>File has been uploaded</h3>
-
-                  <br />
-                  <br />
-                  <button className="close-modall" onClick={toggleModal}>
-                    OK
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
-          </>
+          {modal && (
+            <CustomModal
+              isOpen={() => setModal(true)}
+              closeModal={() => setModal(false)}
+              message="File has been uploaded"
+            />
+          )}
 
           <h1
             style={{ textAlign: "center", fontSize: "3rem", color: "#FF652F" }}
           >
             UPLOAD FILE
           </h1>
+          <div>
+            <InputContainer className="relative">
+              <InputLabel>CourseName</InputLabel>
+              <InputField
+                className="input-text"
+                name="courseName"
+                placeholder="Enter the Course Name"
+                type="text"
+                value={formData.courseName}
+                onChange={(e) => {
+                  handleChange(e);
+                  handleCourseSearch(e.target.value);
+                  setShowCourseOptions(true);
+                }}
+                onBlur={(e) => {
+                  // setShowCourseOptions(false);
+                  handleBlur(e);
+                }}
+              />
+              {showCourseOptions && courseOptions.length > 0 && (
+                <CourseOptions
+                  courseOptions={courseOptions}
+                  handleChange={(course) => handleCourseChange(course)}
+                />
+              )}
+              {errors.courseName && (
+                <p className="text-red-500 text-xs mb-0">{errors.courseName}</p>
+              )}
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>Programme</InputLabel>
+              <InputSelect
+                className="input-text2"
+                name="programmeName"
+                value={formData.programmeName}
+                onChange={(e) => handleChange(e)}
+                onBlur={handleBlur}
+              >
+                {programOptions.length > 0 ? (
+                  <>
+                    {programOptions.map((program) => (
+                      <option key={program} value={program}>
+                        {mapProgramme(program)}
+                      </option>
+                    ))}
+                  </>
+                ) : (
+                  <option color="gray" value="" disabled>
+                    -- No Programme Available --
+                  </option>
+                )}
+              </InputSelect>
+              {errors.programmeName && (
+                <p className="text-red-500 text-xs mb-0">
+                  {errors.programmeName}
+                </p>
+              )}
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>Level</InputLabel>
+              <InputField
+                placeholder="Enter level"
+                name="level"
+                value={mappedLevel}
+                disabled={true}
+              />
 
-          <Formik
-            initialValues={{
-              courseName: "",
-              programmeName: "",
-              level: "",
-              semester: "",
-              filetoUpload: "",
-            }}
-            validationSchema={yup.object().shape({
-              courseName: yup
-                .string()
-                .required("Enter the courseName")
-                .oneOf(course, "Invalid course"),
-              programmeName: yup
-                .string()
-                .required("Select the Programme")
-                .oneOf(
-                  [
-                    "Agricultural Engineering",
-                    "Chemical Engineering",
-                    "Civil Engineering",
-                    "Geomatic Engineering",
-                    "Materials Engineering",
-                    "Mechanical Engineering",
-                    "Electrical Engineering",
-                    "Computer Engineering",
-                    "Aerospace Engineering",
-                    "Petroleum Engineering",
-                    "Telecom Engineering",
-                    "Geological Engineering",
-                    "Biomedical Engineering",
-                    "Petrochemical Engineering",
-                    "Metallurgical Engineering",
-                  ],
-                  "Select the Programme"
-                ),
-              semester: yup
-                .string()
-                .required("Select the Semester")
-                .oneOf(
-                  ["First Semester", "Second Semester"],
-                  "Select the Semester"
-                ),
-              level: yup
-                .string()
-                .required("Select the Year")
-                .oneOf(
-                  ["First Year", "Second Year", "Third Year", "Fourth Year"],
-                  "Select the Year"
-                ),
-              filetoUpload: yup
-                .mixed()
-                .required("You need to provide a file")
-                .test("fileFormat", "Unsupported Format", (value) => {
-                  setFile(value);
-                  return (
-                    value &&
-                    (value.name.slice(-3) === "pdf" ||
-                      value.name.slice(-3) === "ppt" ||
-                      value.name.slice(-4) === "pptx")
-                  );
-                }),
-              // .test("fileFormat", "Invalid document name", (value) => {
-              //   setFile(value);
-              //   return (
-              //     value &&
-              //     (slides.includes(value.name.slice(0, -4)) ||
-              //       slides.includes(value.name.slice(0, -5)))
-              //   );
-              // }
-              // ),
-            })}
-            onSubmit={uploadHandler}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <InputContainer>
-                  <InputLabel>CourseName</InputLabel>
+              {errors.level && (
+                <p className="text-red-500 text-xs mb-0">{errors.level}</p>
+              )}
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>Semester</InputLabel>
+              <InputField
+                disabled={true}
+                placeholder="Enter Semester"
+                name="semester"
+                value={mappedSemester}
+              />
 
-                  <SettingsInput
-                    className="input-text"
-                    name="courseName"
-                    placeholder="Enter the Course Name"
-                    type="text"
-                  />
-                </InputContainer>
+              {errors.semester && (
+                <p className="text-red-500 text-xs">{errors.semester}</p>
+              )}
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>File</InputLabel>
+              <div className="input-dropdown">
+                <input
+                  id="filetoUpload"
+                  name="filetoUpload"
+                  type="file"
+                  onChange={(e) =>
+                    setFormData((prevFormData) => ({
+                      ...prevFormData,
+                      filetoUpload: e.target.files[0],
+                    }))
+                  }
+                  onBlur={handleBlur}
+                />
+              </div>
+              {errors.filetoUpload && (
+                <p className="text-red-500 text-xs mb-0">
+                  {errors.filetoUpload}
+                </p>
+              )}
+            </InputContainer>
+            <ButtonGroup>
+              {!loading && (
+                <div style={{ textAlign: "center" }}>
+                  <UploadButton
+                    type="button"
+                    className="action"
+                    onClick={handleUploadButtonClick}
+                  >
+                    Upload
+                  </UploadButton>
+                </div>
+              )}
 
-                <InputContainer>
-                  <InputLabel>Programme </InputLabel>
-                  <SettingsSelect className="input-text2" name="programmeName">
-                    <option>-- Select Programme --</option>
-                    <option>Agricultural Engineering</option>
-                    <option>Chemical Engineering</option>
-                    <option>Civil Engineering</option>
-                    <option>Geomatic Engineering</option>
-                    <option>Materials Engineering</option>
-                    <option>Mechanical Engineering</option>
-                    <option>Electrical Engineering</option>
-                    <option>Computer Engineering</option>
-                    <option>Aerospace Engineering</option>
-                    <option>Petroleum Engineering</option>
-                    <option>Telecom Engineering</option>
-                    <option>Geological Engineering</option>
-                    <option>Biomedical Engineering</option>
-                    <option>Petrochemical Engineering</option>
-                    <option>Metallurgical Engineering</option>
-                  </SettingsSelect>
-                </InputContainer>
-
-                <InputContainer>
-                  <InputLabel>Level</InputLabel>
-
-                  <SettingsSelect className="input-text4" name="level">
-                    <option>--Select Year--</option>
-                    <option>First Year</option>
-                    <option>Second Year</option>
-                    <option>Third Year</option>
-                    <option>Fourth Year</option>
-                  </SettingsSelect>
-                </InputContainer>
-
-                <InputContainer>
-                  <InputLabel>Semester</InputLabel>
-
-                  <SettingsSelect className="input-text3" name="semester">
-                    <option>--Select Semester--</option>
-                    <option>First Semester</option>
-                    <option>Second Semester</option>
-                  </SettingsSelect>
-                </InputContainer>
-
-                <InputContainer>
-                  <InputLabel>File</InputLabel>
-                  <div className="input-dropdown">
-                    <SettingsFile
-                      id="filetoUpload"
-                      name="filetoUpload"
-                      type="file"
-                    />
-                  </div>
-                </InputContainer>
-                <ButtonGroup>
-                  {!isSubmitting && (
-                    <div style={{ textAlign: "center" }}>
-                      <UploadButton type="submit" className="action">
-                        Upload{" "}
-                      </UploadButton>
-                    </div>
-                  )}
-
-                  {isSubmitting && (
-                    <ThreeDots color="#FF652F" height={49} width={100} />
-                  )}
-                </ButtonGroup>
-              </Form>
-            )}
-          </Formik>
+              {loading && <ThreeDots color="#FF652F" height={49} width={100} />}
+            </ButtonGroup>
+          </div>
         </Wrapper>
       </div>
     </Container>

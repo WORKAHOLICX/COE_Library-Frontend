@@ -1,264 +1,423 @@
-import { Form, Formik } from 'formik';
-import { GiHamburgerMenu } from "react-icons/gi";
-import * as yup from 'yup';
-import axios from '../../utils/axios';
-import React, { useState, useEffect } from 'react';
-import Sidebar1 from '../../AdminDashboard/Sidebar/Sidebar1';
-import { Container, InputContainer, InputLabel, UploadButton, Wrapper, NavBar } from './DeleteStyled';
-import { SettingsInput, SettingsSelect } from '../../Components/Form';
-import { ButtonGroup } from '../../Components/Style';
-import { ThreeDots } from 'react-loader-spinner';
-import './Modal.css'
-
+import axios from "../../utils/axios";
+import React, { useState, useEffect } from "react";
+import Sidebar1 from "../../AdminDashboard/Sidebar/Sidebar1";
+import {
+  Container,
+  InputContainer,
+  InputField,
+  InputLabel,
+  InputSelect,
+  UploadButton,
+  Wrapper,
+} from "./DeleteStyled";
+import { ButtonGroup } from "../../Components/Style";
+import { ThreeDots } from "react-loader-spinner";
+import {
+  CourseOptions,
+  mapProgramme,
+  mapSemester,
+  mapYear,
+} from "../../utils/lib";
+import CustomModal from "../../Components/Modal/CustomModal";
 
 const Delete = () => {
-    const [isopen, setIsopen] = useState(false);
-    const [modal, setModal] = useState(false)
-    const showSidebar = () => {
-        setIsopen(!isopen)
+  const [courseData, setCourseData] = useState([]);
+  const [courseOptions, setCourseOptions] = useState([]);
+  const [programOptions, setProgramOptions] = useState([]);
+  const [filteredSlides, setFilteredSlides] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [showCourseOptions, setShowCourseOptions] = useState(false);
+  const [formData, setFormData] = useState({
+    courseName: "",
+    programme: "",
+    level: "",
+    semester: "",
+    filetoDelete: "",
+  });
+  const [mappedLevel, setMappedLevel] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [mappedSemester, setMappedSemester] = useState("");
+  const [errors, setErrors] = useState({});
+  const [touchedFields, setTouchedFields] = useState({
+    courseName: false,
+    programme: false,
+    filetoDelete: false,
+  });
+
+  useEffect(() => {
+    const fetchData = () => {
+      axios
+        .get("/admin/course")
+        .then((res) => {
+          setCourseData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    fetchData();
+  }, [modal]);
+
+  useEffect(() => {
+    const filteredCourseData = courseData.find(
+      (course) =>
+        course.name === formData.courseName && course.IDM === formData.programme
+    );
+
+    if (filteredCourseData) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        level: filteredCourseData.year,
+        semester: filteredCourseData.semester,
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        level: "",
+        semester: "",
+      }));
     }
+  }, [formData.courseName, formData.programme, courseData]);
 
-    const [course, setcourse] = useState([])
+  useEffect(() => {
+    const updateFilteredSlides = () => {
+      const filteredSlides = courseData.filter(
+        (course) =>
+          course.name === formData.courseName &&
+          course.IDM === formData.programme &&
+          course.year === formData.level &&
+          course.semester === formData.semester
+      );
+      if (filteredSlides.length > 0) {
+        setFilteredSlides(filteredSlides[0].slides);
+      } else {
+        setFilteredSlides([]);
+      }
+    };
 
-    useEffect(() => {
-        function fetchData() {
-            axios.get("/admin/course")
-                .then(res => {
-                    setcourse(res.data.map(o => o.name).flat());
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+    updateFilteredSlides();
+  }, [
+    formData.courseName,
+    formData.programme,
+    formData.level,
+    formData.semester,
+    courseData,
+  ]);
+
+  useEffect(() => {
+    setMappedLevel(mapYear(formData.level));
+    setMappedSemester(mapSemester(formData.semester));
+  }, [formData.level, formData.semester, formData.programme]);
+
+  useEffect(() => {
+    if (formData.courseName !== "") {
+      const filteredPrograms = courseData
+        .filter((course) => course.name === formData.courseName)
+        .map((course) => course.IDM);
+      setProgramOptions([...new Set(filteredPrograms)]);
+    } else {
+      const uniqueIDMs = [...new Set(courseData.map((course) => course.IDM))];
+      setProgramOptions(uniqueIDMs);
+    }
+  }, [formData.courseName, courseData]);
+
+  useEffect(() => {
+    handleChange({
+      target: {
+        name: "programme",
+        value: programOptions[0] || "",
+      },
+    });
+  }, [programOptions, courseData]);
+
+  useEffect(() => {
+    handleChange({
+      target: {
+        name: "filetoDelete",
+        value: filteredSlides[0] || "",
+      },
+    });
+  }, [filteredSlides, courseData]);
+
+  const DeleteHandler = async () => {
+    try {
+      setLoading(true);
+      const mappedFormData = {
+        ...formData,
+        level: mapYear(formData.level),
+        semester: mapSemester(formData.semester),
+        programme: mapProgramme(formData.programme),
+      };
+
+      await axios.post("/admin/delete", mappedFormData);
+      setModal(true);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+      setFormData({
+        courseName: "",
+        programme: "",
+        level: "",
+        semester: "",
+        filetoDelete: "",
+      });
+      setTouchedFields({
+        courseName: false,
+        programme: false,
+        filetoDelete: false,
+      });
+    }
+  };
+
+  const handleCourseChange = (selectedCourse) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      courseName: selectedCourse,
+    }));
+    setShowCourseOptions(false);
+    setTouchedFields((prevTouchedFields) => ({
+      ...prevTouchedFields,
+      courseName: true,
+    }));
+    const error = validateField("courseName", selectedCourse);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      courseName: error,
+    }));
+  };
+
+  const handleCourseSearch = (wordEntered) => {
+    if (wordEntered?.trim() === "") {
+      setCourseOptions([]);
+    } else {
+      const uniqueCourseOptions = new Set(
+        courseData
+          .filter((course) =>
+            course.name.toLowerCase().includes(wordEntered.toLowerCase())
+          )
+          .map((course) => course.name)
+      );
+      setCourseOptions(Array.from(uniqueCourseOptions));
+    }
+  };
+
+  const validateField = (name, value) => {
+    switch (name) {
+      case "courseName":
+        if (value === "") {
+          return "Enter the courseName";
+        } else if (value !== "" && !courseOptions.includes(value)) {
+          return "Course Name does not exist";
         }
-        fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-
-
-    const uploadHandler = async (input) => {
-        const formData = new FormData();
-        formData.append('filetoDelete', input.filetoDelete);
-        formData.append('courseName', input.courseName)
-        formData.append('programme', input.programmeName)
-        formData.append('level', input.level)
-        formData.append('semester', input.semester)
-
-        await axios.post("/admin/delete", formData)
-            .then((res) => {
-                console.log(res)
-                setModal(true)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        break;
+      case "programme":
+        return value?.trim() === "" ? "Select the Programme" : "";
+      case "filetoDelete":
+        return value?.trim() === "" ? "No slides available" : "";
+      default:
+        break;
     }
 
-    const slides = [
-        "Lecture One", "Lecture Two", "Lecture Three", "Lecture Four", "Lecture Five", "Lecture Six", "Lecture Seven", "Lecture Eight", "Lecture Nine", "Lecture Ten", "Lecture Eleven", "Lecture Twelve", "Lecture Thirteen", "Lecture Fourteen", "Lecture Fifteen", "Lecture Sixteen", "Lecture Seventeen", "Lecture Eighteen", "Lecture Nineteen", "Lecture Twenty"
-    ]
+    return "";
+  };
 
-    const toggleModal = () => {
-        setModal(!modal)
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+
+    if (touchedFields[name]) {
+      const error = validateField(name, value);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: error,
+      }));
     }
+  };
 
-    if (modal) {
-        document.body.classList.add('active-modall')
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    let error = validateField(name, value);
+
+    setTouchedFields((prevTouchedFields) => ({
+      ...prevTouchedFields,
+      [name]: true,
+    }));
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+  };
+
+  const handleUploadButtonClick = () => {
+    let allErrors = {};
+    for (const fieldName in formData) {
+      const error = validateField(fieldName, formData[fieldName]);
+      if (error) {
+        allErrors[fieldName] = error;
+      }
     }
-    else {
-        document.body.classList.remove('active-modall')
+    setErrors(allErrors);
+
+    if (Object.keys(allErrors).length === 0) {
+      DeleteHandler();
     }
+  };
 
+  return (
+    <Container>
+      <div className="overlay">
+        <Sidebar1 isopen={false} />
 
+        <Wrapper>
+          <>
+            {modal && (
+              <CustomModal
+                isOpen={() => setModal(true)}
+                closeModal={() => setModal(false)}
+                message="File has been deleted"
+              />
+            )}
+          </>
 
+          <h1
+            style={{ textAlign: "center", fontSize: "3rem", color: "#FF652F" }}
+          >
+            DELETE FILE
+          </h1>
 
-    return (
+          <div>
+            <InputContainer className="relative">
+              <InputLabel>CourseName</InputLabel>
+              <InputField
+                className="input-text"
+                name="courseName"
+                placeholder="Enter the Course Name"
+                type="text"
+                value={formData.courseName}
+                onChange={(e) => {
+                  handleChange(e);
+                  handleCourseSearch(e.target.value);
+                  setShowCourseOptions(true);
+                }}
+                onBlur={(e) => {
+                  handleBlur(e);
+                }}
+              />
+              {showCourseOptions && courseOptions.length > 0 && (
+                <CourseOptions
+                  courseOptions={courseOptions}
+                  handleChange={(course) => handleCourseChange(course)}
+                />
+              )}
+              {errors.courseName && (
+                <p className="text-red-500 text-xs mb-0">{errors.courseName}</p>
+              )}
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>Programme</InputLabel>
+              <InputSelect
+                className="input-text2"
+                name="programme"
+                value={formData.programme}
+                onChange={(e) => handleChange(e)}
+                onBlur={handleBlur}
+              >
+                {programOptions.length > 0 ? (
+                  <>
+                    {programOptions.map((program) => (
+                      <option key={program} value={program}>
+                        {mapProgramme(program)}
+                      </option>
+                    ))}
+                  </>
+                ) : (
+                  <option color="gray" value="" disabled>
+                    -- No Programme Available --
+                  </option>
+                )}
+              </InputSelect>
+              {errors.programme && (
+                <p className="text-red-500 text-xs mb-0">{errors.programme}</p>
+              )}
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>Level</InputLabel>
+              <InputField
+                placeholder="Enter level"
+                name="level"
+                value={mappedLevel}
+                disabled={true}
+              />
 
-        <Container>
-            <div className='overlay'>
+              {errors.level && (
+                <p className="text-red-500 text-xs mb-0">{errors.level}</p>
+              )}
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>Semester</InputLabel>
+              <InputField
+                disabled={true}
+                placeholder="Enter Semester"
+                name="semester"
+                value={mappedSemester}
+              />
 
+              {errors.semester && (
+                <p className="text-red-500 text-xs">{errors.semester}</p>
+              )}
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>File</InputLabel>
+              <InputSelect
+                className="input-text2"
+                name="filetoDelete"
+                value={formData.filetoDelete}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              >
+                {filteredSlides.length > 0 ? (
+                  filteredSlides.map((slides, index) => (
+                    <option key={index} value={slides}>
+                      {slides}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>
+                    -- No Slides Available --
+                  </option>
+                )}
+              </InputSelect>
+              {errors.filetoDelete && (
+                <p className="text-red-500 text-xs mb-0">
+                  {errors.filetoDelete}
+                </p>
+              )}
+            </InputContainer>
+            <ButtonGroup>
+              {!loading && (
+                <div style={{ textAlign: "center" }}>
+                  <UploadButton
+                    type="button"
+                    className="action"
+                    onClick={handleUploadButtonClick}
+                  >
+                    Delete
+                  </UploadButton>
+                </div>
+              )}
 
-
-                <Sidebar1 isopen={isopen} />
-
-                {/* <NavBar>
-                    <GiHamburgerMenu className="hamburger" onClick={showSidebar} style={{ paddingLeft: '10px' }} />
-
-
-                </NavBar> */}
-
-
-                <Wrapper>
-
-                    <>
-                        {modal ? (
-
-                            <div className="modall">
-                                <div onClick={toggleModal} className="overlayss" ></div>
-                                <div className="modall-content" >
-                                    <div className="topic">
-                                    </div>
-                                    <hr />
-                                    <h3>File has been deleted</h3>
-
-                                    <br /><br />
-                                    <button className="close-modall" onClick={toggleModal}>OK</button>
-                                </div>
-                            </div>
-
-                        ) : (
-                            <></>
-                        )
-
-                        }
-                    </>
-
-                    <h1 style={{ textAlign: 'center', fontSize: '3rem', color: '#FF652F' }}>
-                        DELETE FILE
-                    </h1>
-
-                    <Formik
-                        initialValues={{
-                            courseName: "",
-                            programmeName: "",
-                            level: "",
-                            semester: "",
-                            filetoDelete: ""
-                        }}
-                        validationSchema={
-                            yup.object().shape({
-                                courseName: yup.string()
-                                    .required("Enter the courseName")
-                                    .oneOf(course, "Invalid course"),
-                                programmeName: yup.string()
-                                    .required("Select the Programme")
-                                    .oneOf(["Agricultural Engineering", "Chemical Engineering", "Civil Engineering", "Geomatic Engineering", "Materials Engineering", "Mechanical Engineering", "Electrical Engineering", "Computer Engineering", "Aerospace Engineering", "Petroleum Engineering", "Telecom Engineering", "Geological Engineering", "Biomedical Engineering", "Petrochemical Engineering", "Metallurgical Engineering"], "Select the Programme"),
-                                semester: yup.string()
-                                    .required("Select the Semester")
-                                    .oneOf(["First Semester", "Second Semester"], "Select the Semester"),
-                                level: yup.string()
-                                    .required("Select the Year")
-                                    .oneOf(["First Year", "Second Year", "Third Year", "Fourth Year"], "Select the Year"),
-                                filetoDelete: yup.mixed()
-                                    .required("You need to enter the filename")
-                                    .test("fileFormat", "Unsupported Format", (value) => {
-                                        return value && (value.slice(-3) === "pdf" || value.slice(-3) === "ppt" || value.slice(-4) === "pptx")
-                                    })
-                                    .test("fileFormat", "Invalid document name", (value) => {
-                                        return value && (slides.includes(value.slice(0, -4)) || slides.includes(value.slice(0, -5)))
-                                    })
-
-                            })
-                        }
-                        onSubmit={uploadHandler}
-                    >
-
-                        {({ isSubmitting }) => (
-                            <Form>
-
-                                <InputContainer>
-                                    <InputLabel>CourseName</InputLabel>
-
-
-                                    <SettingsInput
-                                        className="input-text"
-                                        name="courseName"
-                                        placeholder="Enter the Course Name"
-                                        type="text"
-                                    />
-                                </InputContainer>
-
-                                <InputContainer>
-
-
-                                    <InputLabel>Programme </InputLabel>
-                                    <SettingsSelect className="input-text2" name='programmeName'>
-                                        <option>-- Select Programme --</option>
-                                        <option>Agricultural Engineering</option>
-                                        <option>Chemical Engineering</option>
-                                        <option>Civil Engineering</option>
-                                        <option>Geomatic Engineering</option>
-                                        <option>Materials Engineering</option>
-                                        <option>Mechanical Engineering</option>
-                                        <option>Electrical Engineering</option>
-                                        <option>Computer Engineering</option>
-                                        <option>Aerospace Engineering</option>
-                                        <option>Petroleum Engineering</option>
-                                        <option>Telecom Engineering</option>
-                                        <option>Geological Engineering</option>
-                                        <option>Biomedical Engineering</option>
-                                        <option>Petrochemical Engineering</option>
-                                        <option>Metallurgical Engineering</option>
-                                    </SettingsSelect>
-                                </InputContainer>
-
-                                <InputContainer>
-
-                                    <InputLabel>Level</InputLabel>
-
-                                    <SettingsSelect className="input-text4" name='level'>
-                                        <option>--Select Year--</option>
-                                        <option>First Year</option>
-                                        <option>Second Year</option>
-                                        <option>Third Year</option>
-                                        <option>Fourth Year</option>
-                                    </SettingsSelect>
-                                </InputContainer>
-
-                                <InputContainer>
-
-                                    <InputLabel>Semester</InputLabel>
-
-                                    <SettingsSelect className="input-text3" name='semester'>
-                                        <option>--Select Semester--</option>
-                                        <option>First Semester</option>
-                                        <option>Second Semester</option>
-                                    </SettingsSelect>
-
-                                </InputContainer>
-
-
-                                <InputContainer>
-
-                                    <InputLabel>File</InputLabel>
-                                    <div className="input-dropdown">
-
-                                        <SettingsInput className="input-text" name="filetoDelete" type="text" placeholder="Enter the filename" />
-
-                                    </div>
-
-                                </InputContainer>
-                                <ButtonGroup>
-                                    {!isSubmitting && (
-                                        <div style={{ textAlign: 'center' }}>
-                                            <UploadButton type="submit" className="action">Delete</UploadButton>
-                                        </div>
-                                    )}
-                                    {isSubmitting && (
-                                        <ThreeDots
-                                            color='#FF652F'
-                                            height={49}
-                                            width={100}
-                                        />
-                                    )}
-                                </ButtonGroup>
-
-
-                            </Form>
-                        )}
-
-
-
-                    </Formik>
-
-
-                </Wrapper>
-
-            </div>
-
-        </Container >
-    )
-
-
-}
-export default Delete
+              {loading && <ThreeDots color="#FF652F" height={49} width={100} />}
+            </ButtonGroup>
+          </div>
+        </Wrapper>
+      </div>
+    </Container>
+  );
+};
+export default Delete;
