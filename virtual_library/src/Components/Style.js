@@ -180,7 +180,7 @@ export const Erromsg = styled.div`
 export const ExtraText = styled.p`
     font-size: ${(props) => props.size}px;
     text-align: center;
-    color: white;
+    color: black;
     padding: 2px;
     margin-top: 10px;
 
