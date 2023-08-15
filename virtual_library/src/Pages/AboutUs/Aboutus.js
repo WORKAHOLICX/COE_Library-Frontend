@@ -22,8 +22,8 @@ function Aboutus() {
 
 
                 <div className="team">
-                    <h2 className="highlights">TEAM HOFF</h2>
-                    <p>We are a team of 12 engineers who share the same interest and vision. </p>
+                    <h2 className="highlights">WORKAHOLICS</h2>
+                    <p>We are a team of 7 engineers who share the same interest and vision. </p>
                 </div>
 
                 <div className="vision">

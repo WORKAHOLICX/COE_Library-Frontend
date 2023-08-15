@@ -45,7 +45,7 @@ const ResetPassword = () => {
             Click <TextLink to="/forgotpassword">ForgotPassword</TextLink> to get a valid token
           </ExtraText>
         </StyledFormArea>
-          <CopyrightText>All rights reserved &copy;2022</CopyrightText>
+          <CopyrightText>All rights reserved &copy;2023</CopyrightText>
         </div>
     </StyledContainer>
     
@@ -137,7 +137,7 @@ const ResetPassword = () => {
           ) 
         }
           </StyledFormArea>
-          <CopyrightText>Copyright © 2022 <strong>Team Hoff</strong> All rights reserved</CopyrightText>
+          <CopyrightText>Copyright © 2023 <strong>WORKAHOLICS</strong> All rights reserved</CopyrightText>
         </div>
     </StyledContainer>
     

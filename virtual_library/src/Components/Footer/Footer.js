@@ -16,7 +16,7 @@ function Footer() {
 
                         </p>
 
-                        <p className="footer-library-name">Copyright © 2022 <strong>Team Hoff</strong> All rights reserved</p>
+                        <p className="footer-library-name">Copyright © 2023 <strong>WORKAHOLICS</strong> All rights reserved</p>
                     </div>
 
                     <div className="footer-center">

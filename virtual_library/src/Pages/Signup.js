@@ -249,7 +249,7 @@ const Signup = () => {
               </>
             )}
         </StyledFormArea>
-        <CopyrightText>Copyright © 2022 <strong>Team Hoff</strong> All rights reserved</CopyrightText>
+        <CopyrightText>Copyright © 2023 <strong>WORKAHOLICS</strong> All rights reserved</CopyrightText>
       </div>
     </StyledContainer>
 

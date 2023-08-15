@@ -23,7 +23,7 @@ export const StyledContainer = styled.div`
     justify-content: center;
     align-items: center;
     /* background: linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://th.bing.com/th/id/OIP.m_8yGJPbQ_G0r5X7Yx_JeQHaE8?pid=ImgDet&rs=1'); */
-    background: linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://i.pinimg.com/originals/29/46/4a/29464aa3c5800484f4577ca0c53f8953.jpg');
+    background: linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://citinewsroom.com/wp-content/uploads/2021/01/KNUST.jpg');
     background-size: 100% 100%;
     background-attachment: fixed; 
 
