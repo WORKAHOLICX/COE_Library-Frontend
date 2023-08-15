@@ -45,7 +45,7 @@ const ForgotPassword = () => {
         <div style={{display:'flex'}}>
         <Avatar image={Logo}/>
           <StyledTitle color='Light black' size={40}>
-            <span style={{font: "normal 36px 'Poppins', cursive", margin: 0}}>Virtual</span><span style={{color:'#e0ac1c',font: "normal 36px 'Poppins', cursive"}}>Library</span>
+            <span style={{font: "normal 36px 'Poppins', cursive", margin: 0}}>E - </span><span style={{color:'#e0ac1c',font: "normal 36px 'Poppins', cursive"}}>Library</span>
           </StyledTitle></div>
           
           {!emailSent?(

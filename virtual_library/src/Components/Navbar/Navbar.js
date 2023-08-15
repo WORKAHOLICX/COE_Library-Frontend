@@ -12,7 +12,7 @@ function Navbar() {
           <div style={{display:'flex', cursor:'pointer'}} onClick={()=> {navigate("/home")}} >
           <div className="logo-image"></div>
             <div><h1>
-                <span className='virtual'>Virtual</span><span className="librarys">Library</span>
+                <span className='virtual'>E - </span><span className="librarys">Library</span>
             </h1></div>
             </div>
               <Profiledp/>            

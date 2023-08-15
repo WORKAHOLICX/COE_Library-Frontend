@@ -23,7 +23,7 @@ export const StyledContainer = styled.div`
     justify-content: center;
     align-items: center;
     /* background: linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://th.bing.com/th/id/OIP.m_8yGJPbQ_G0r5X7Yx_JeQHaE8?pid=ImgDet&rs=1'); */
-    background: linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://citinewsroom.com/wp-content/uploads/2021/01/KNUST.jpg');
+    background: linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://mcf.knust.edu.gh/wp-content/uploads/2023/07/Best-University-in-the-World-KNUST.jpg');
     background-size: 100% 100%;
     background-attachment: fixed; 
 

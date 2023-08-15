@@ -65,10 +65,10 @@ function Aboutus() {
 
                         <div className="contact-column">
                             <h4 style={{ fontSize: '18px', margin: '10px' }}>Contact us on</h4>
-                            <div className="contact-detail"><span className="con">Telephone:</span>+233 592001472</div>
-                            <div className="contact-detail"><span className="con">Email:</span> hoffteam59@gmail.com</div>
-                            <div className="contact-detail"><span className="con">Twitter:</span> @HoffTeam</div>
-                            <div className="contact-detail"><span className="con">LinkedIn:</span> Team-Hoff</div>
+                            <div className="contact-detail"><span className="con">Telephone:</span>+233 553212010</div>
+                            <div className="contact-detail"><span className="con">Email:</span> workaholics322@gmail.com</div>
+                            <div className="contact-detail"><span className="con">Twitter:</span> @workaholics</div>
+                            <div className="contact-detail"><span className="con">LinkedIn:</span> @workaholics</div>
                         </div>
 
                         <div className="contact-photo2"></div>

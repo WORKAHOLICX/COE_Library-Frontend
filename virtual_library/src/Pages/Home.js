@@ -50,7 +50,7 @@ const Home = () => {
               <h1 style={{ textAlign: "center", paddingTop: "30px" }}>
                 {" "}
                 <span className="text-warning">
-                  WELCOME TO THE CoE VIRTUAL LIBRARY
+                  WELCOME TO THE CoE E - Library
                 </span>
               </h1>
               <p style={{ color: "white", textAlign: "center" }}>

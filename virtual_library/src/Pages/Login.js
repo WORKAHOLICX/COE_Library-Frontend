@@ -93,7 +93,7 @@ const Login = () => {
               <span
                 style={{ font: "normal 36px 'Poppins', cursive", margin: 0 }}
               >
-                Virtual
+                E - 
               </span>
               <span
                 style={{
