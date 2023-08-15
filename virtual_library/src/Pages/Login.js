@@ -7,7 +7,6 @@ import {
   Avatar,
   StyledTitle,
   StyledSubTitle,
-  colors,
   ButtonGroup,
   ExtraText,
   TextLink,
@@ -141,7 +140,7 @@ const Login = () => {
                   name="username"
                   type="text"
                   label="Username"
-                  placeholder="Enter your username"
+                  placeholder="Enter username"
                   icon={<FiUser />}
                 />
                 <Erromsg>{visibile && Error}</Erromsg>
@@ -150,7 +149,7 @@ const Login = () => {
                   name="password"
                   type="password"
                   label="Password"
-                  placeholder="Enter your password"
+                  placeholder="Enter password"
                   icon={<FiLock />}
                 />
                 <Erromsg>{visibile && Error}</Erromsg>
@@ -161,8 +160,8 @@ const Login = () => {
                     position: "relative",
                     left: "-100px",
                     top: "0px",
-                    color: "red",
-                    fontSize: "17px",
+                    color: "#ca080c",
+                    fontSize: "15px",
                     letterSpacing: "0px",
                   }}
                 >
@@ -177,7 +176,7 @@ const Login = () => {
                   )}
 
                   {isSubmitting && (
-                    <ThreeDots color={colors.theme} height={49} width={100} />
+                    <ThreeDots color='#e0ac1c' height={49} width={100} />
                   )}
                 </ButtonGroup>
               </Form>
@@ -193,14 +192,14 @@ const Login = () => {
             <img
               src={Google}
               alt="google"
-              style={{ height: "25px", width: "25px" }}
+              style={{ height: "24px", width: "24px" }}
             ></img>
             <span>Log in with your google account</span>
           </ExtraTexts>
 
           <ExtraText>
             Don't have an account? Click{" "}
-            <TextLink to="/signup">Signup</TextLink> to register
+            <TextLink to="/signup" style={{ color: '#e0ac1c'}}>Signup</TextLink> to register
           </ExtraText>
         </StyledFormArea>
         <CopyrightText>Copyright © 2023 <strong>WORKALOLICS</strong> All rights reserved</CopyrightText>

@@ -15,6 +15,7 @@ export const TextInput = ({ icon, ...props }) => {
                 <StyledTextInput
                     {...field}
                     {...props}
+                    style={{ borderRadius: "10px"}}
                 />
             )}
 
@@ -23,6 +24,7 @@ export const TextInput = ({ icon, ...props }) => {
                     {...field}
                     {...props}
                     type={show ? "text" : "password"}
+                    style={{ borderRadius: "10px"}}
                 />
             )}
 

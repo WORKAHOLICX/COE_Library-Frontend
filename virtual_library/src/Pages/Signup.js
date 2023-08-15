@@ -1,4 +1,4 @@
-import { Erromsg, StyledContainer, StyledFormArea, StyledFormButton, Avatar, StyledTitle, StyledSubTitle, colors, ButtonGroup, ExtraText, TextLink, CopyrightText } from "../Components/Style";
+import { Erromsg, StyledContainer, StyledFormArea, StyledFormButton, Avatar, StyledTitle, StyledSubTitle, ButtonGroup, ExtraText, TextLink, CopyrightText } from "../Components/Style";
 import Logo from './../Assets/Klogo.png';
 import React, { useState } from "react";
 import axios from './utils/axios';
@@ -222,7 +222,7 @@ const Signup = () => {
 
                     {isSubmitting && (
                       <ThreeDots
-                        color={colors.theme}
+                        color="#e0ac1c"
                         height={49}
                         width={100}
                       />
@@ -244,7 +244,7 @@ const Signup = () => {
               <>
                 <span>You've been Signed Up</span>
                 <ExtraText>
-                  Click <TextLink to="/">Login</TextLink> to sign in with your new account
+                  Click <TextLink to="/" style={{ color: '#e0ac1c'}}>Login</TextLink> to sign in with your new account
                 </ExtraText>
               </>
             )}

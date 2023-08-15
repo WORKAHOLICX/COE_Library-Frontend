@@ -92,7 +92,7 @@ export const StyledTextInput = styled.input`
     padding: 15px;
     padding-left: 50px;
     padding-right: 50px;
-    font-size: 17px;
+    font-size: 15px;
     letter-spacing: 1px;
     color: ${colors.dark1};
     background-color: ${colors.light2};
@@ -180,7 +180,7 @@ export const Erromsg = styled.div`
 export const ExtraText = styled.p`
     font-size: ${(props) => props.size}px;
     text-align: center;
-    color: black;
+    color: white;
     padding: 2px;
     margin-top: 10px;
 
