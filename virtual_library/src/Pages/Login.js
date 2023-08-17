@@ -176,7 +176,7 @@ const Login = () => {
                   )}
 
                   {isSubmitting && (
-                    <ThreeDots color='#e0ac1c' height={49} width={100} />
+                    <ThreeDots color='#e0ac1c' height={35} width={100} />
                   )}
                 </ButtonGroup>
               </Form>

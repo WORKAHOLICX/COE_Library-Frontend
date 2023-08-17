@@ -38,7 +38,7 @@ function Footer() {
                         <br />
                         <br />
                         <div className="footer-icons">
-                            <a href="https://web.facebook.com/groups/508115227398958" target="_blank" rel="noopener noreferrer"><FaFacebookSquare /></a>
+                            <a href="https://www.facebook.com/profile.php?id=61550102254325" target="_blank" rel="noopener noreferrer"><FaFacebookSquare /></a>
                             <a href="http://www.linkedin.com/in/workaholics-undefined-7378bb288" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
                             <a href="https://twitter.com/workaholics322?s=11&t=lcRc7b8MXg2uAlE2J_GcWg" target="_blank" rel="noopener noreferrer"><FaTwitterSquare /></a>
                         </div>
